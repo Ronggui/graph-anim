@@ -4,13 +4,13 @@ This module allows you to create an animation of a graph with a 3D layout rotati
 The output is a list of C{.png} snapshots of the rotating 3D view at 1 degree intervals. If you have C{ffmpeg} installed, all snapshots will be compiled into an C{.mp4} movie as well.
 '''
 import numpy.random as rd
-from mypalettes import mplPalette
+#from mypalettes import mplPalette
 import numpy as np
 import igraph as ig
 import os
 
 
-def animate(g, layout = None, filename = "frame" , height = 800, rendermovie = True, outfile = 'anim'):
+def animate(g, layout = None, filename = "frame" , height = 800, rendermovie = True, outfile = 'anim’, ffmpeg = "ffmpeg"):
     """
     Rotate 3d layout of graph C{g} and export a C{.png} snapshot 
     for each angle.
@@ -75,7 +75,7 @@ def animate(g, layout = None, filename = "frame" , height = 800, rendermovie = T
             bbox=(0,0,int(aspect*height),height)
            )
     if rendermovie:
-        result = os.system(' ffmpeg -y -r 60 -qscale 2 -i %s-%%03d.png %s.mp4' % (filename,outfile))
+        result = os.system(ffmpeg + ‘ -y -r 60 -qscale 2 -i %s-%%03d.png %s.mp4' % (filename,outfile))
         if result != 0:
             print "Eerror: could not render movie with ffmpeg."
     
@@ -136,7 +136,6 @@ def rgba_to_color_name(rgba):
 
 if __name__ == "__main__":
     g = ig.Graph.Barabasi(400,1)
-    pal = mplPalette(max(g.degree()) + 1,'autumn')
-
-    g.vs['color'] = [pal.get(d) for d in g.degree() ]
-    animate(g, filename = 'frame')
+    #pal = mplPalette(max(g.degree()) + 1,'autumn')
+    #g.vs['color'] = [pal.get(d) for d in g.degree() ]
+    animate(g, filename = 'frame', ffmpeg= "/Users/rghuang/Downloads/ffmpeg/ffmpeg")
