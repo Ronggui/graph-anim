@@ -3,14 +3,15 @@ This module allows you to create an animation of a graph with a 3D layout rotati
 
 The output is a list of C{.png} snapshots of the rotating 3D view at 1 degree intervals. If you have C{ffmpeg} installed, all snapshots will be compiled into an C{.mp4} movie as well.
 '''
-import numpy.random as rd
+
+#import numpy.random as rd
 #from mypalettes import mplPalette
 import numpy as np
 import igraph as ig
 import os
 
 
-def animate(g, layout = None, filename = "frame" , height = 800, rendermovie = True, outfile = 'anim’, ffmpeg = "ffmpeg"):
+def animate(g, layout = None, filename = "frame" , height = 800, rendermovie = True, outfile = 'anim', ffmpeg = 'ffmpeg'):
     """
     Rotate 3d layout of graph C{g} and export a C{.png} snapshot 
     for each angle.
@@ -33,11 +34,11 @@ def animate(g, layout = None, filename = "frame" , height = 800, rendermovie = T
     if 'color' not in g.vs.attribute_names():
         g.vs['color'] = [(255,255,255)] * g.vcount()
     
-    print "Framing the layout..."
+    print("Framing the layout...")
     gg = frame_the_graph(g)
 
     if layout is None:
-        print "computing 3d layout..."
+        print("computing 3d layout...")
         layout = g.layout_fruchterman_reingold_3d()
 
 
@@ -75,9 +76,9 @@ def animate(g, layout = None, filename = "frame" , height = 800, rendermovie = T
             bbox=(0,0,int(aspect*height),height)
            )
     if rendermovie:
-        result = os.system(ffmpeg + ‘ -y -r 60 -qscale 2 -i %s-%%03d.png %s.mp4' % (filename,outfile))
+        result = os.system(ffmpeg + ' -y -r 60 -qscale 2 -i %s-%%03d.png %s.mp4' % (filename,outfile))
         if result != 0:
-            print "Eerror: could not render movie with ffmpeg."
+            print("Eerror: could not render movie with ffmpeg.")
     
 
 
